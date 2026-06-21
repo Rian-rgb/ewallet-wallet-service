@@ -1,0 +1,32 @@
+package http
+
+import (
+	"ewallet-wallet/infra"
+	"github.com/Rian-rgb/ewallet-common-lib/middleware"
+	"github.com/gin-gonic/gin"
+)
+
+func registerWalletRoutes(
+	api *gin.RouterGroup,
+	dependency *infra.Dependency,
+	appDeps *infra.AppDependencies,
+) {
+	wallet := api.Group("/wallet")
+
+	wallet.POST(
+		"",
+		dependency.WalletAPI.Create,
+	)
+
+	walletAuth := wallet
+	walletAuth.Use(
+		middleware.AuthMiddleware(
+			appDeps.JWTManager.ValidateToken,
+			*appDeps.RedisRepo,
+		))
+
+	walletAuth.GET(
+		"/balance",
+		dependency.WalletAPI.GetBalance,
+	)
+}

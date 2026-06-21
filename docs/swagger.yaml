@@ -1,0 +1,321 @@
+basePath: /api/v1
+definitions:
+  errors.Code:
+    enum:
+    - UNKNOWN_ERROR
+    - INTERNAL_SERVER_ERROR
+    - BAD_REQUEST
+    - UNAUTHORIZED
+    - FORBIDDEN
+    - NOT_FOUND
+    - USER_NOT_FOUND
+    - SESSION_NOT_FOUND
+    - INVALID_PASSWORD
+    - WALLET_NOT_FOUND
+    - INVALID_STATUS_TRANSITION
+    - DUPLICATE_REFERENCE
+    - TRANSACTION_NOT_FOUND
+    - INSUFFICIENT_BALANCE
+    type: string
+    x-enum-varnames:
+    - ErrCodeUnknownError
+    - ErrCodeInternalServerError
+    - ErrCodeBadRequest
+    - ErrCodeUnauthorized
+    - ErrCodeForbidden
+    - ErrCodeNotFound
+    - ErrCodeUserNotFound
+    - ErrCodeSessionNotFound
+    - ErrCodeInvalidPassword
+    - ErrCodeWalletNotFound
+    - ErrCodeInvalidStatusTransition
+    - ErrCodeDuplicateReference
+    - ErrCodeTransactionNotFound
+    - ErrCodeInsufficientBalance
+  ewallet-wallet_internal_dto_transaction_dto.TransactionPaginationResponse:
+    properties:
+      amount:
+        type: number
+      created_at:
+        type: string
+      transaction_type:
+        type: string
+    type: object
+  ewallet-wallet_internal_dto_transaction_dto.TransactionRequest:
+    properties:
+      amount:
+        type: number
+      reference:
+        type: string
+    required:
+    - amount
+    - reference
+    type: object
+  ewallet-wallet_internal_dto_transaction_dto.TransactionResponse:
+    properties:
+      balance:
+        type: number
+    type: object
+  ewallet-wallet_internal_dto_wallet_dto.CreateWalletRequest:
+    properties:
+      user_id:
+        type: integer
+    required:
+    - user_id
+    type: object
+  ewallet-wallet_internal_dto_wallet_dto.CreateWalletResponse:
+    properties:
+      balance:
+        type: number
+      id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  ewallet-wallet_internal_dto_wallet_dto.GetBalanceResponse:
+    properties:
+      balance:
+        type: number
+    type: object
+  response.BadRequestResponse:
+    properties:
+      error_code:
+        $ref: '#/definitions/errors.Code'
+      errors:
+        items:
+          $ref: '#/definitions/response.ValidationErrorField'
+        type: array
+      message:
+        type: string
+    type: object
+  response.ErrorResponse:
+    properties:
+      error_code:
+        $ref: '#/definitions/errors.Code'
+      message:
+        type: string
+    type: object
+  response.SuccessResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      meta: {}
+    type: object
+  response.ValidationErrorField:
+    properties:
+      field:
+        type: string
+      message:
+        type: string
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  description: |-
+    API Service for managing user accounts, authentication, and authorization.
+    Features include: user registration, login, logout, token refresh, and token validation.
+    <br/><b>Developer:</b> Muhammad Brilian Satria Utama
+    <b>Environment:</b> Development
+  title: E Wallet API (User Management Service)
+  version: "0.0"
+paths:
+  /wallet-transaction/credit:
+    put:
+      consumes:
+      - application/json
+      description: Adds funds to the user's wallet. This endpoint updates the current
+        wallet balance by applying the specified credit amount.
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Payload credit wallet
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/ewallet-wallet_internal_dto_transaction_dto.TransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/ewallet-wallet_internal_dto_transaction_dto.TransactionResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BadRequestResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Credit Wallet
+  /wallet-transaction/debit:
+    put:
+      consumes:
+      - application/json
+      description: 'Deducts funds from the user''s wallet. This endpoint updates the
+        wallet balance by applying the specified debit amount. Note: This action will
+        return an error if the current balance is insufficient.'
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Payload debit wallet
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/ewallet-wallet_internal_dto_transaction_dto.TransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/ewallet-wallet_internal_dto_transaction_dto.TransactionResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BadRequestResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Debit Wallet
+  /wallet-transaction/history:
+    get:
+      consumes:
+      - application/json
+      description: 'Gets the transaction history for the user''s wallet. This endpoint
+        returns a paginated list of credit and debit transactions. Note: This action
+        provides a chronological view of all wallet activities for auditing and tracking
+        purposes.'
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: size
+        type: integer
+      - description: Filter by type (CREDIT/DEBIT)
+        in: query
+        name: transactionType
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/ewallet-wallet_internal_dto_transaction_dto.TransactionPaginationResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BadRequestResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get Transaction User
+  /wallet/:
+    post:
+      consumes:
+      - application/json
+      description: 'Registers a new wallet for the user. Note: Each user is limited
+        to only one active wallet. This endpoint will return an error if a wallet
+        already exists.'
+      parameters:
+      - description: Payload creates wallet user
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/ewallet-wallet_internal_dto_wallet_dto.CreateWalletRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/ewallet-wallet_internal_dto_wallet_dto.CreateWalletResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BadRequestResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Create Wallet User
+  /wallet/balance:
+    get:
+      consumes:
+      - application/json
+      description: 'Retrieves the current balance of the user''s wallet. This endpoint
+        returns the available funds with the authenticated user account. Note: This
+        action does not modify any wallet data and provides the most up-to-date balance
+        information.'
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/ewallet-wallet_internal_dto_wallet_dto.GetBalanceResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.BadRequestResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Get Wallet Balance User
+swagger: "2.0"

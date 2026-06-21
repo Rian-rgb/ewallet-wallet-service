@@ -1,0 +1,475 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API Service for managing user accounts, authentication, and authorization.\nFeatures include: user registration, login, logout, token refresh, and token validation.\n\u003cbr/\u003e\u003cb\u003eDeveloper:\u003c/b\u003e Muhammad Brilian Satria Utama\n\u003cb\u003eEnvironment:\u003c/b\u003e Development",
+        "title": "E Wallet API (User Management Service)",
+        "contact": {},
+        "version": "0.0"
+    },
+    "host": "localhost:8081",
+    "basePath": "/api/v1",
+    "paths": {
+        "/wallet-transaction/credit": {
+            "put": {
+                "description": "Adds funds to the user's wallet. This endpoint updates the current wallet balance by applying the specified credit amount.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Credit Wallet",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer \u003ctoken\u003e",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Payload credit wallet",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ewallet-wallet_internal_dto_transaction_dto.TransactionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/ewallet-wallet_internal_dto_transaction_dto.TransactionResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequestResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/wallet-transaction/debit": {
+            "put": {
+                "description": "Deducts funds from the user's wallet. This endpoint updates the wallet balance by applying the specified debit amount. Note: This action will return an error if the current balance is insufficient.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Debit Wallet",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer \u003ctoken\u003e",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Payload debit wallet",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ewallet-wallet_internal_dto_transaction_dto.TransactionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/ewallet-wallet_internal_dto_transaction_dto.TransactionResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequestResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/wallet-transaction/history": {
+            "get": {
+                "description": "Gets the transaction history for the user's wallet. This endpoint returns a paginated list of credit and debit transactions. Note: This action provides a chronological view of all wallet activities for auditing and tracking purposes.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Transaction User",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer \u003ctoken\u003e",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items per page",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by type (CREDIT/DEBIT)",
+                        "name": "transactionType",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/ewallet-wallet_internal_dto_transaction_dto.TransactionPaginationResponse"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequestResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/wallet/": {
+            "post": {
+                "description": "Registers a new wallet for the user. Note: Each user is limited to only one active wallet. This endpoint will return an error if a wallet already exists.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create Wallet User",
+                "parameters": [
+                    {
+                        "description": "Payload creates wallet user",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ewallet-wallet_internal_dto_wallet_dto.CreateWalletRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/ewallet-wallet_internal_dto_wallet_dto.CreateWalletResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequestResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/wallet/balance": {
+            "get": {
+                "description": "Retrieves the current balance of the user's wallet. This endpoint returns the available funds with the authenticated user account. Note: This action does not modify any wallet data and provides the most up-to-date balance information.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get Wallet Balance User",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer \u003ctoken\u003e",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/ewallet-wallet_internal_dto_wallet_dto.GetBalanceResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.BadRequestResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "errors.Code": {
+            "type": "string",
+            "enum": [
+                "UNKNOWN_ERROR",
+                "INTERNAL_SERVER_ERROR",
+                "BAD_REQUEST",
+                "UNAUTHORIZED",
+                "FORBIDDEN",
+                "NOT_FOUND",
+                "USER_NOT_FOUND",
+                "SESSION_NOT_FOUND",
+                "INVALID_PASSWORD",
+                "WALLET_NOT_FOUND",
+                "INVALID_STATUS_TRANSITION",
+                "DUPLICATE_REFERENCE",
+                "TRANSACTION_NOT_FOUND",
+                "INSUFFICIENT_BALANCE"
+            ],
+            "x-enum-varnames": [
+                "ErrCodeUnknownError",
+                "ErrCodeInternalServerError",
+                "ErrCodeBadRequest",
+                "ErrCodeUnauthorized",
+                "ErrCodeForbidden",
+                "ErrCodeNotFound",
+                "ErrCodeUserNotFound",
+                "ErrCodeSessionNotFound",
+                "ErrCodeInvalidPassword",
+                "ErrCodeWalletNotFound",
+                "ErrCodeInvalidStatusTransition",
+                "ErrCodeDuplicateReference",
+                "ErrCodeTransactionNotFound",
+                "ErrCodeInsufficientBalance"
+            ]
+        },
+        "ewallet-wallet_internal_dto_transaction_dto.TransactionPaginationResponse": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "transaction_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "ewallet-wallet_internal_dto_transaction_dto.TransactionRequest": {
+            "type": "object",
+            "required": [
+                "amount",
+                "reference"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "reference": {
+                    "type": "string"
+                }
+            }
+        },
+        "ewallet-wallet_internal_dto_transaction_dto.TransactionResponse": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "number"
+                }
+            }
+        },
+        "ewallet-wallet_internal_dto_wallet_dto.CreateWalletRequest": {
+            "type": "object",
+            "required": [
+                "user_id"
+            ],
+            "properties": {
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "ewallet-wallet_internal_dto_wallet_dto.CreateWalletResponse": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "number"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "ewallet-wallet_internal_dto_wallet_dto.GetBalanceResponse": {
+            "type": "object",
+            "properties": {
+                "balance": {
+                    "type": "number"
+                }
+            }
+        },
+        "response.BadRequestResponse": {
+            "type": "object",
+            "properties": {
+                "error_code": {
+                    "$ref": "#/definitions/errors.Code"
+                },
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.ValidationErrorField"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.ErrorResponse": {
+            "type": "object",
+            "properties": {
+                "error_code": {
+                    "$ref": "#/definitions/errors.Code"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string"
+                },
+                "meta": {}
+            }
+        },
+        "response.ValidationErrorField": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
