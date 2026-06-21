@@ -6,8 +6,8 @@ import (
 	"ewallet-wallet/internal/errors"
 	appErrors "github.com/Rian-rgb/ewallet-common-lib/errors"
 	"github.com/Rian-rgb/ewallet-common-lib/logger"
-	contextUtil "github.com/Rian-rgb/ewallet-common-lib/pkg/context"
 	"github.com/Rian-rgb/ewallet-common-lib/response"
+	"github.com/Rian-rgb/ewallet-common-lib/security"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -17,7 +17,9 @@ type WalletHandler struct {
 }
 
 // @Summary Create Wallet User
-// @Description Registers a new wallet for the user. Note: Each user is limited to only one active wallet. This endpoint will return an error if a wallet already exists.
+// @Description Registers a new wallet for the user.
+// @Description Note: Each user is limited to only one active wallet.
+// @Descrtiption Note: This endpoint will return an error if a wallet already exists.
 // @Accept       json
 // @Produce      json
 // @Param        request  body      wallet_dto.CreateWalletRequest  true  "Payload creates wallet user"
@@ -49,7 +51,9 @@ func (api *WalletHandler) Create(ctx *gin.Context) {
 }
 
 // @Summary Get Wallet Balance User
-// @Description Retrieves the current balance of the user's wallet. This endpoint returns the available funds with the authenticated user account. Note: This action does not modify any wallet data and provides the most up-to-date balance information.
+// @Description Retrieves the current balance of the user's wallet.
+// @Description Note: This endpoint returns the available funds with the authenticated user account.
+// @Description Note: This action does not modify any wallet data and provides the most up-to-date balance information.
 // @Accept       json
 // @Produce      json
 // @Param        Authorization  header    string  true  "Bearer <token>"
@@ -61,7 +65,7 @@ func (api *WalletHandler) GetBalance(ctx *gin.Context) {
 
 	errCodeUnauthorized := appErrors.ErrCodeUnauthorized
 
-	userData, exists := contextUtil.GetGinToken(ctx)
+	userData, exists := security.GetGinToken(ctx)
 	if !exists {
 		logger.WithContext(ctx).Error("token user data no exists: ", userData)
 		response.SendError(ctx, errCodeUnauthorized.ToHTTPStatus(), errCodeUnauthorized, response.InvalidTokenMessage)

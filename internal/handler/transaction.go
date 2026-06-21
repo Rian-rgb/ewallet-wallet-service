@@ -6,8 +6,8 @@ import (
 	"ewallet-wallet/internal/errors"
 	appErrors "github.com/Rian-rgb/ewallet-common-lib/errors"
 	"github.com/Rian-rgb/ewallet-common-lib/logger"
-	contextUtil "github.com/Rian-rgb/ewallet-common-lib/pkg/context"
 	"github.com/Rian-rgb/ewallet-common-lib/response"
+	"github.com/Rian-rgb/ewallet-common-lib/security"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -17,7 +17,8 @@ type TransactionHandler struct {
 }
 
 // @Summary Credit Wallet
-// @Description Adds funds to the user's wallet. This endpoint updates the current wallet balance by applying the specified credit amount.
+// @Description Adds funds to the user's wallet.
+// @Description Note: This endpoint updates the current wallet balance by applying the specified credit amount.
 // @Accept       json
 // @Produce      json
 // @Param        Authorization  header    string  true  "Bearer <token>"
@@ -46,7 +47,7 @@ func (api *TransactionHandler) CreditBalance(ctx *gin.Context) {
 		return
 	}
 
-	userData, exists := contextUtil.GetGinToken(ctx)
+	userData, exists := security.GetGinToken(ctx)
 	if !exists {
 		logger.WithContext(ctx).Error("token user data no exists: ", userData)
 		response.SendError(ctx, errCodeUnauthorized.ToHTTPStatus(), errCodeUnauthorized, response.InvalidTokenMessage)
@@ -66,7 +67,9 @@ func (api *TransactionHandler) CreditBalance(ctx *gin.Context) {
 }
 
 // @Summary Debit Wallet
-// @Description Deducts funds from the user's wallet. This endpoint updates the wallet balance by applying the specified debit amount. Note: This action will return an error if the current balance is insufficient.
+// @Description Deducts funds from the user's wallet.
+// @Description Note: This endpoint updates the wallet balance by applying the specified debit amount.
+// @Description Note: This action will return an error if the current balance is insufficient.
 // @Accept       json
 // @Produce      json
 // @Param        Authorization  header    string  true  "Bearer <token>"
@@ -95,7 +98,7 @@ func (api *TransactionHandler) DebitBalance(ctx *gin.Context) {
 		return
 	}
 
-	userData, exists := contextUtil.GetGinToken(ctx)
+	userData, exists := security.GetGinToken(ctx)
 	if !exists {
 		logger.WithContext(ctx).Error("token user data no exists: ", userData)
 		response.SendError(ctx, errCodeUnauthorized.ToHTTPStatus(), errCodeUnauthorized, response.InvalidTokenMessage)
@@ -114,8 +117,9 @@ func (api *TransactionHandler) DebitBalance(ctx *gin.Context) {
 	response.SendSuccess(ctx, http.StatusCreated, response.SuccessMessage, resp)
 }
 
-// @Summary Get Transaction User
-// @Description Gets the transaction history for the user's wallet. This endpoint returns a paginated list of credit and debit transactions. Note: This action provides a chronological view of all wallet activities for auditing and tracking purposes.
+// @Summary Get Pagination Transaction User
+// @Description Retrieves the transaction history for the user's wallet.
+// @Description Note: This endpoint returns a paginated list of credit and debit transactions.
 // @Accept       json
 // @Produce      json
 // @Param        Authorization  header    string  true  "Bearer <token>"
@@ -146,7 +150,7 @@ func (api *TransactionHandler) GetPaginition(ctx *gin.Context) {
 		return
 	}
 
-	userData, exists := contextUtil.GetGinToken(ctx)
+	userData, exists := security.GetGinToken(ctx)
 	if !exists {
 		logger.WithContext(ctx).Error("token user data no exists: ", userData)
 		response.SendError(ctx, errCodeUnauthorized.ToHTTPStatus(), errCodeUnauthorized, response.InvalidTokenMessage)

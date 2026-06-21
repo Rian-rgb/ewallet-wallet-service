@@ -11,7 +11,7 @@
     "paths": {
         "/wallet-transaction/credit": {
             "put": {
-                "description": "Adds funds to the user's wallet. This endpoint updates the current wallet balance by applying the specified credit amount.",
+                "description": "Adds funds to the user's wallet.\nNote: This endpoint updates the current wallet balance by applying the specified credit amount.",
                 "consumes": [
                     "application/json"
                 ],
@@ -73,7 +73,7 @@
         },
         "/wallet-transaction/debit": {
             "put": {
-                "description": "Deducts funds from the user's wallet. This endpoint updates the wallet balance by applying the specified debit amount. Note: This action will return an error if the current balance is insufficient.",
+                "description": "Deducts funds from the user's wallet.\nNote: This endpoint updates the wallet balance by applying the specified debit amount.\nNote: This action will return an error if the current balance is insufficient.",
                 "consumes": [
                     "application/json"
                 ],
@@ -135,14 +135,14 @@
         },
         "/wallet-transaction/history": {
             "get": {
-                "description": "Gets the transaction history for the user's wallet. This endpoint returns a paginated list of credit and debit transactions. Note: This action provides a chronological view of all wallet activities for auditing and tracking purposes.",
+                "description": "Retrieves the transaction history for the user's wallet.\nNote: This endpoint returns a paginated list of credit and debit transactions.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get Transaction User",
+                "summary": "Get Pagination Transaction User",
                 "parameters": [
                     {
                         "type": "string",
@@ -209,7 +209,7 @@
         },
         "/wallet/": {
             "post": {
-                "description": "Registers a new wallet for the user. Note: Each user is limited to only one active wallet. This endpoint will return an error if a wallet already exists.",
+                "description": "Registers a new wallet for the user.\nNote: Each user is limited to only one active wallet.",
                 "consumes": [
                     "application/json"
                 ],
@@ -264,7 +264,7 @@
         },
         "/wallet/balance": {
             "get": {
-                "description": "Retrieves the current balance of the user's wallet. This endpoint returns the available funds with the authenticated user account. Note: This action does not modify any wallet data and provides the most up-to-date balance information.",
+                "description": "Retrieves the current balance of the user's wallet.\nNote: This endpoint returns the available funds with the authenticated user account.\nNote: This action does not modify any wallet data and provides the most up-to-date balance information.",
                 "consumes": [
                     "application/json"
                 ],
