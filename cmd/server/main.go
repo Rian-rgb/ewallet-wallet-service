@@ -23,9 +23,6 @@ func main() {
 	// load redis
 	redisRepo := infra.InitRedis()
 
-	// load jwt
-	jwtManager := infra.InitJWT()
-
 	// run grpc
 	gRPCRegistry, cleanup := grpc.NewConnRegistry()
 	defer cleanup()
@@ -33,7 +30,6 @@ func main() {
 	appDeps := &infra.AppDependencies{
 		PostgresDB:   postgresDB,
 		RedisRepo:    redisRepo,
-		JWTManager:   jwtManager,
 		GrpcRegistry: gRPCRegistry,
 	}
 

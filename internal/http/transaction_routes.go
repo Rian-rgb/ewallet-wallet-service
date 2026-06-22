@@ -14,7 +14,7 @@ func registerTransactionRoutes(
 	walletTransaction := api.Group("/wallet-transaction")
 	walletTransaction.Use(
 		middleware.AuthMiddleware(
-			appDeps.JWTManager.ValidateToken,
+			dependency.UmsClient.ValidateToken,
 			*appDeps.RedisRepo,
 		))
 

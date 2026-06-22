@@ -1,10 +1,9 @@
 package external
 
 import (
-	"context"
-	"ewallet-wallet/external/ums"
+	"github.com/Rian-rgb/ewallet-common-lib/security"
 )
 
 type UmsClient interface {
-	ValidateToken(ctx context.Context, token string) (ums.Token, error)
+	ValidateToken(token string) (*security.ClaimToken, error)
 }

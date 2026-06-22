@@ -5,6 +5,7 @@ import (
 	internalErrors "ewallet-wallet/internal/errors"
 	"github.com/Rian-rgb/ewallet-common-lib/logger"
 	"github.com/Rian-rgb/ewallet-common-lib/response"
+	"github.com/Rian-rgb/ewallet-common-lib/security"
 	pb "github.com/Rian-rgb/ewallet-proto/gen/token_validation/v1"
 	"time"
 )
@@ -21,25 +22,28 @@ func NewClient(client pb.TokenValidationServiceClient) *Client {
 	}
 }
 
-func (c *Client) ValidateToken(ctx context.Context, token string) (Token, error) {
-	var resp Token
+func (c *Client) ValidateToken(token string) (*security.ClaimToken, error) {
+	ctx := context.Background()
 
 	rpcCtx, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
 
 	result, err := c.client.ValidateToken(rpcCtx, &pb.ValidateTokenRequest{Token: token})
 	if err != nil {
-		return resp, err
+		return nil, err
 	}
 
 	if result.GetMessage() != response.SuccessMessage {
 		logger.WithContext(ctx).Error("response message is not success: ", result.GetMessage())
-		return resp, internalErrors.ErrInternalServerError
+		return nil, internalErrors.ErrInternalServerError
 	}
 
-	resp.UserID = result.GetData().GetUserId()
-	resp.Username = result.GetData().GetUsername()
-	resp.FullName = result.GetData().GetFullName()
+	dataResult := result.GetData()
+	resp := &security.ClaimToken{
+		UserID:   int(dataResult.GetUserId()),
+		Username: dataResult.GetUsername(),
+		FullName: dataResult.GetFullName(),
+	}
 
 	return resp, nil
 }
