@@ -27,7 +27,7 @@ type TransactionHandler struct {
 // @Failure      400      {object}  response.BadRequestResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Router       /wallet-transaction/credit [put]
-func (api *TransactionHandler) CreditBalance(ctx *gin.Context) {
+func (hdl *TransactionHandler) CreditBalance(ctx *gin.Context) {
 	var (
 		req                 transaction_dto.TransactionRequest
 		errCodeBadRequest   = appErrors.ErrCodeBadRequest
@@ -55,7 +55,7 @@ func (api *TransactionHandler) CreditBalance(ctx *gin.Context) {
 	}
 
 	transactionEntity := req.ToEntity()
-	newBalance, err := api.TransactionSvc.CreditBalance(ctx, userData.UserID, transactionEntity)
+	newBalance, err := hdl.TransactionSvc.CreditBalance(ctx, userData.UserID, transactionEntity)
 	if err != nil {
 		errors.HandleServiceError(ctx, err)
 		return
@@ -78,7 +78,7 @@ func (api *TransactionHandler) CreditBalance(ctx *gin.Context) {
 // @Failure      400      {object}  response.BadRequestResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Router       /wallet-transaction/debit [put]
-func (api *TransactionHandler) DebitBalance(ctx *gin.Context) {
+func (hdl *TransactionHandler) DebitBalance(ctx *gin.Context) {
 	var (
 		req                 transaction_dto.TransactionRequest
 		errCodeBadRequest   = appErrors.ErrCodeBadRequest
@@ -106,7 +106,7 @@ func (api *TransactionHandler) DebitBalance(ctx *gin.Context) {
 	}
 
 	transactionEntity := req.ToEntity()
-	newBalance, err := api.TransactionSvc.DebitBalance(ctx, userData.UserID, transactionEntity)
+	newBalance, err := hdl.TransactionSvc.DebitBalance(ctx, userData.UserID, transactionEntity)
 	if err != nil {
 		errors.HandleServiceError(ctx, err)
 		return
@@ -130,7 +130,7 @@ func (api *TransactionHandler) DebitBalance(ctx *gin.Context) {
 // @Failure      400      {object}  response.BadRequestResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Router       /wallet-transaction/history [get]
-func (api *TransactionHandler) GetPaginition(ctx *gin.Context) {
+func (hdl *TransactionHandler) GetPaginition(ctx *gin.Context) {
 	var (
 		req                 transaction_dto.TransactionPaginationRequest
 		errCodeBadRequest   = appErrors.ErrCodeBadRequest
@@ -157,7 +157,7 @@ func (api *TransactionHandler) GetPaginition(ctx *gin.Context) {
 		return
 	}
 
-	transactionsEntity, totalPage, totalData, err := api.TransactionSvc.GetPagination(
+	transactionsEntity, totalPage, totalData, err := hdl.TransactionSvc.GetPagination(
 		ctx,
 		userData.UserID,
 		req.Page,

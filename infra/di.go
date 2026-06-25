@@ -6,14 +6,14 @@ import (
 	"ewallet-wallet/internal/domain/wallet"
 	"ewallet-wallet/internal/handler"
 	"ewallet-wallet/internal/repository"
-	"ewallet-wallet/internal/services"
+	"ewallet-wallet/internal/service"
 	pb "github.com/Rian-rgb/ewallet-proto/gen/token_validation/v1"
 )
 
 type Dependency struct {
 	WalletRepo     wallet.IRepository
-	WalletAPI      wallet.IHandler
-	TransactionAPI transaction.IHandler
+	WalletHdl      wallet.IHandler
+	TransactionHdl transaction.IHandler
 	UmsClient      *ums.Client
 }
 
@@ -27,22 +27,22 @@ func DependencyInject(appDeps *AppDependencies) *Dependency {
 		DB: appDeps.PostgresDB,
 	}
 
-	uow := &services.UnitOfWork{
+	uow := &service.UnitOfWork{
 		DB: appDeps.PostgresDB,
 	}
-	walletSvc := &services.WalletService{
+	walletSvc := &service.WalletService{
 		WalletRepo: walletRepo,
 	}
-	walletTransactionSvc := &services.TransactionService{
+	walletTransactionSvc := &service.TransactionService{
 		TransactionRepo: walletTransactionRepo,
 		WalletRepo:      walletRepo,
 		Uow:             uow,
 	}
 
-	walletAPI := &handler.WalletHandler{
+	walletHdl := &handler.WalletHandler{
 		WalletSvc: walletSvc,
 	}
-	walletTransactionAPI := &handler.TransactionHandler{
+	walletTransactionHdl := &handler.TransactionHandler{
 		TransactionSvc: walletTransactionSvc,
 	}
 
@@ -51,8 +51,8 @@ func DependencyInject(appDeps *AppDependencies) *Dependency {
 
 	return &Dependency{
 		WalletRepo:     walletRepo,
-		WalletAPI:      walletAPI,
-		TransactionAPI: walletTransactionAPI,
+		WalletHdl:      walletHdl,
+		TransactionHdl: walletTransactionHdl,
 		UmsClient:      umsGrpcClient,
 	}
 }

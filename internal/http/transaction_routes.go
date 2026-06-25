@@ -20,16 +20,16 @@ func registerTransactionRoutes(
 
 	walletTransaction.PUT(
 		"/credit",
-		dependency.TransactionAPI.CreditBalance,
+		dependency.TransactionHdl.CreditBalance,
 	)
 
 	walletTransaction.PUT(
 		"/debit",
-		dependency.TransactionAPI.DebitBalance,
+		dependency.TransactionHdl.DebitBalance,
 	)
 
 	walletTransaction.GET(
 		"/history",
-		dependency.TransactionAPI.GetPaginition,
+		dependency.TransactionHdl.GetPaginition,
 	)
 }

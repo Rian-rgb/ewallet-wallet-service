@@ -18,7 +18,7 @@ type ClientConnWrapper struct {
 
 func NewClientConn(cfg Config) (*ClientConnWrapper, error) {
 	kacp := keepalive.ClientParameters{
-		Time:                10 * time.Second,
+		Time:                1 * time.Minute,
 		Timeout:             3 * time.Second,
 		PermitWithoutStream: true,
 	}

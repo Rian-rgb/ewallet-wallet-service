@@ -15,7 +15,7 @@ func registerWalletRoutes(
 
 	wallet.POST(
 		"",
-		dependency.WalletAPI.Create,
+		dependency.WalletHdl.Create,
 	)
 
 	walletAuth := wallet
@@ -27,6 +27,6 @@ func registerWalletRoutes(
 
 	walletAuth.GET(
 		"/balance",
-		dependency.WalletAPI.GetBalance,
+		dependency.WalletHdl.GetBalance,
 	)
 }

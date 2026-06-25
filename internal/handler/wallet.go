@@ -27,7 +27,7 @@ type WalletHandler struct {
 // @Failure      400      {object}  response.BadRequestResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Router       /wallet/ [post]
-func (api *WalletHandler) Create(ctx *gin.Context) {
+func (hdl *WalletHandler) Create(ctx *gin.Context) {
 	var (
 		req            wallet_dto.CreateWalletRequest
 		codeBadRequest = appErrors.ErrCodeBadRequest
@@ -39,7 +39,7 @@ func (api *WalletHandler) Create(ctx *gin.Context) {
 		return
 	}
 
-	walletEntity, err := api.WalletSvc.CreateWallet(ctx, req.ToEntity())
+	walletEntity, err := hdl.WalletSvc.CreateWallet(ctx, req.ToEntity())
 	if err != nil {
 		errors.HandleServiceError(ctx, err)
 		return
@@ -61,7 +61,7 @@ func (api *WalletHandler) Create(ctx *gin.Context) {
 // @Failure      400      {object}  response.BadRequestResponse
 // @Failure      500      {object}  response.ErrorResponse
 // @Router       /wallet/balance [get]
-func (api *WalletHandler) GetBalance(ctx *gin.Context) {
+func (hdl *WalletHandler) GetBalance(ctx *gin.Context) {
 
 	errCodeUnauthorized := appErrors.ErrCodeUnauthorized
 
@@ -72,7 +72,7 @@ func (api *WalletHandler) GetBalance(ctx *gin.Context) {
 		return
 	}
 
-	balance, err := api.WalletSvc.GetBalance(ctx, userData.UserID)
+	balance, err := hdl.WalletSvc.GetBalance(ctx, userData.UserID)
 	if err != nil {
 		errors.HandleServiceError(ctx, err)
 		return

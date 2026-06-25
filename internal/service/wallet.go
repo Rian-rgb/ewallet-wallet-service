@@ -1,4 +1,4 @@
-package services
+package service
 
 import (
 	"context"
@@ -16,7 +16,7 @@ type WalletService struct {
 func (s *WalletService) CreateWallet(ctx context.Context, walletEntity *wallet.Entity) (*wallet.Entity, error) {
 	err := s.WalletRepo.Save(walletEntity)
 	if err != nil {
-		logger.WithContext(ctx).Error("failed to save walletEntity: ", err)
+		logger.WithContext(ctx).Error("failed to save wallet: ", err)
 		return nil, internalErrors.ErrInternalServerError
 	}
 

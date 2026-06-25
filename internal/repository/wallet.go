@@ -9,8 +9,8 @@ type WalletRepository struct {
 	DB *gorm.DB
 }
 
-func (repo *WalletRepository) Save(wallet *wallet.Entity) error {
-	return repo.DB.Create(wallet).Error
+func (repo *WalletRepository) Save(entity *wallet.Entity) error {
+	return repo.DB.Create(entity).Error
 }
 
 func (repo *WalletRepository) FindByUserID(userID int) (walletEntity *wallet.Entity, err error) {
