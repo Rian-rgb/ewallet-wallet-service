@@ -7,8 +7,8 @@ import (
 )
 
 type TransactionRequest struct {
-	Reference string  `json:"reference" binding:"required"`
-	Amount    float64 `json:"amount" binding:"required"`
+	Reference string  `json:"reference" validate:"required"`
+	Amount    float64 `json:"amount" validate:"required"`
 }
 
 func (req TransactionRequest) Validate() []response.ValidationErrorField {
