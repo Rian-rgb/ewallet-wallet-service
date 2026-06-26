@@ -195,12 +195,14 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
+                        "default": 1,
                         "description": "Page number",
                         "name": "page",
                         "in": "query"
                     },
                     {
                         "type": "integer",
+                        "default": 10,
                         "description": "Number of items per page",
                         "name": "size",
                         "in": "query"
@@ -452,15 +454,12 @@ const docTemplate = `{
         "ewallet-wallet_internal_dto_transaction_dto.TransactionRequest": {
             "type": "object",
             "required": [
-                "amount",
-                "reference"
+                "amount"
             ],
             "properties": {
                 "amount": {
-                    "type": "number"
-                },
-                "reference": {
-                    "type": "string"
+                    "type": "number",
+                    "example": 10000
                 }
             }
         },

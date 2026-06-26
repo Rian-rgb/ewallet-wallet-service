@@ -44,12 +44,10 @@ definitions:
   ewallet-wallet_internal_dto_transaction_dto.TransactionRequest:
     properties:
       amount:
+        example: 10000
         type: number
-      reference:
-        type: string
     required:
     - amount
-    - reference
     type: object
   ewallet-wallet_internal_dto_transaction_dto.TransactionResponse:
     properties:
@@ -222,11 +220,13 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: Page number
+      - default: 1
+        description: Page number
         in: query
         name: page
         type: integer
-      - description: Number of items per page
+      - default: 10
+        description: Number of items per page
         in: query
         name: size
         type: integer

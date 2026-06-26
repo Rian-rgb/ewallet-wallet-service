@@ -7,6 +7,7 @@ import (
 	"ewallet-wallet/internal/domain/wallet"
 	internalErrors "ewallet-wallet/internal/errors"
 	"github.com/Rian-rgb/ewallet-common-lib/logger"
+	"github.com/Rian-rgb/ewallet-common-lib/utils"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	"math"
@@ -60,6 +61,7 @@ func (svc *TransactionService) CreditBalance(
 		}
 
 		walletTransaction.WalletID = walletEntity.ID
+		walletTransaction.Reference = utils.GenerateUUID()
 		walletTransaction.TransactionType = transaction.Credit
 
 		if err := svc.TransactionRepo.SaveTx(
@@ -127,6 +129,7 @@ func (svc *TransactionService) DebitBalance(
 		}
 
 		walletTransaction.WalletID = walletEntity.ID
+		walletTransaction.Reference = utils.GenerateUUID()
 		walletTransaction.TransactionType = transaction.Debit
 
 		if err := svc.TransactionRepo.SaveTx(

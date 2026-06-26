@@ -7,8 +7,7 @@ import (
 )
 
 type TransactionRequest struct {
-	Reference string  `json:"reference" validate:"required"`
-	Amount    float64 `json:"amount" validate:"required"`
+	Amount float64 `json:"amount" validate:"required" example:"10000"`
 }
 
 func (req TransactionRequest) Validate() []response.ValidationErrorField {
@@ -20,7 +19,6 @@ func (req TransactionRequest) Validate() []response.ValidationErrorField {
 
 func (req *TransactionRequest) ToEntity() *transaction.Entity {
 	return &transaction.Entity{
-		Reference: req.Reference,
-		Amount:    req.Amount,
+		Amount: req.Amount,
 	}
 }

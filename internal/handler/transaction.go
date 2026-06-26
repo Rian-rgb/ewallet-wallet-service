@@ -133,8 +133,8 @@ func (hdl *TransactionHandler) DebitBalance(ctx *gin.Context) {
 // @Produce		json
 //
 // @Param		Authorization		header		string		true		"Bearer <token>"
-// @Param       page           		query     	int     	false  		"Page number"
-// @Param       size          		query     	int     	false  		"Number of items per page"
+// @Param       page           		query     	int     	false  		"Page number"						default(1)
+// @Param       size          		query     	int     	false  		"Number of items per page"			default(10)
 // @Param       transactionType 	query 		string 		false 		"Filter by type (CREDIT/DEBIT)"
 //
 // @Success		200	{object}	response.SuccessResponse{data=[]transaction_dto.TransactionPaginationResponse}	"Success"
