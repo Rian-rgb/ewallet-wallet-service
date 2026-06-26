@@ -42,7 +42,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Payload credit wallet",
+                        "description": "Request Body",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -118,7 +118,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Payload debit wallet",
+                        "description": "Request Body",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -284,7 +284,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Payload create user's wallet",
+                        "description": "Request Body",
                         "name": "request",
                         "in": "body",
                         "required": true,

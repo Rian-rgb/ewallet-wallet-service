@@ -23,7 +23,7 @@ type WalletHandler struct {
 // @Produce		json
 //
 // @Param		Authorization	header		string								true	"Bearer <token>"
-// @Param		request			body		wallet_dto.CreateWalletRequest		true	"Payload create user's wallet"
+// @Param		request			body		wallet_dto.CreateWalletRequest		true	"Request Body"
 //
 // @Success		201	{object}	response.SuccessResponse{data=wallet_dto.CreateWalletResponse}	"Created"
 // @Failure		400	{object}	response.BadRequestResponse										"Bad Request"

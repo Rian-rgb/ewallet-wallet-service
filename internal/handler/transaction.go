@@ -23,7 +23,7 @@ type TransactionHandler struct {
 // @Produce		json
 //
 // @Param		Authorization	header		string									true	"Bearer <token>"
-// @Param		request			body		transaction_dto.TransactionRequest		true	"Payload credit wallet"
+// @Param		request			body		transaction_dto.TransactionRequest		true	"Request Body"
 //
 // @Success		200	{object}	response.SuccessResponse{data=transaction_dto.TransactionResponse}	"Success"
 // @Failure		400	{object}	response.BadRequestResponse											"Bad Request"
@@ -78,7 +78,7 @@ func (hdl *TransactionHandler) CreditBalance(ctx *gin.Context) {
 // @Produce		json
 //
 // @Param		Authorization	header		string									true	"Bearer <token>"
-// @Param		request			body		transaction_dto.TransactionRequest		true	"Payload debit wallet"
+// @Param		request			body		transaction_dto.TransactionRequest		true	"Request Body"
 //
 // @Success		200	{object}	response.SuccessResponse{data=transaction_dto.TransactionResponse}	"Success"
 // @Failure		400	{object}	response.BadRequestResponse											"Bad Request"
