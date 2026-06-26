@@ -16,17 +16,22 @@ type TransactionHandler struct {
 	TransactionSvc transaction.IService
 }
 
-// @Summary Credit Wallet
-// @Description Adds funds to the user's wallet.
-// @Description Note: This endpoint updates the current wallet balance by applying the specified credit amount.
-// @Accept       json
-// @Produce      json
-// @Param        Authorization  header    string  true  "Bearer <token>"
-// @Param        request  body      transaction_dto.TransactionRequest  true  "Payload credit wallet"
-// @Success      200      {object}  response.SuccessResponse{data=transaction_dto.TransactionResponse}
-// @Failure      400      {object}  response.BadRequestResponse
-// @Failure      500      {object}  response.ErrorResponse
-// @Router       /wallet-transaction/credit [put]
+// @Summary		Credit Wallet
+// @Description	Adds funds to the user's wallet.
+// @Tags		Transaction
+// @Accept		json
+// @Produce		json
+//
+// @Param		Authorization	header		string									true	"Bearer <token>"
+// @Param		request			body		transaction_dto.TransactionRequest		true	"Payload credit wallet"
+//
+// @Success		200	{object}	response.SuccessResponse{data=transaction_dto.TransactionResponse}	"Success"
+// @Failure		400	{object}	response.BadRequestResponse											"Bad Request"
+// @Failure		401	{object}	response.ErrorResponse												"Unauthorized"
+// @Failure		500	{object}	response.ErrorResponse												"Internal Server Error"
+//
+// @Security	BearerAuth
+// @Router		/wallet-transaction/credit [put]
 func (hdl *TransactionHandler) CreditBalance(ctx *gin.Context) {
 	var (
 		req                 transaction_dto.TransactionRequest
@@ -63,21 +68,25 @@ func (hdl *TransactionHandler) CreditBalance(ctx *gin.Context) {
 
 	resp := transaction_dto.TransactionResponse{Balance: newBalance}
 
-	response.SendSuccess(ctx, http.StatusCreated, response.SuccessMessage, resp)
+	response.SendSuccess(ctx, http.StatusOK, response.SuccessMessage, resp)
 }
 
-// @Summary Debit Wallet
-// @Description Deducts funds from the user's wallet.
-// @Description Note: This endpoint updates the wallet balance by applying the specified debit amount.
-// @Description Note: This action will return an error if the current balance is insufficient.
-// @Accept       json
-// @Produce      json
-// @Param        Authorization  header    string  true  "Bearer <token>"
-// @Param        request  body      transaction_dto.TransactionRequest  true  "Payload debit wallet"
-// @Success      200      {object}  response.SuccessResponse{data=transaction_dto.TransactionResponse}
-// @Failure      400      {object}  response.BadRequestResponse
-// @Failure      500      {object}  response.ErrorResponse
-// @Router       /wallet-transaction/debit [put]
+// @Summary		Debit Wallet
+// @Description	Deducts funds from the user's wallet.
+// @Tags		Transaction
+// @Accept		json
+// @Produce		json
+//
+// @Param		Authorization	header		string									true	"Bearer <token>"
+// @Param		request			body		transaction_dto.TransactionRequest		true	"Payload debit wallet"
+//
+// @Success		200	{object}	response.SuccessResponse{data=transaction_dto.TransactionResponse}	"Success"
+// @Failure		400	{object}	response.BadRequestResponse											"Bad Request"
+// @Failure		401	{object}	response.ErrorResponse												"Unauthorized"
+// @Failure		500	{object}	response.ErrorResponse												"Internal Server Error"
+//
+// @Security	BearerAuth
+// @Router		/wallet-transaction/debit [put]
 func (hdl *TransactionHandler) DebitBalance(ctx *gin.Context) {
 	var (
 		req                 transaction_dto.TransactionRequest
@@ -114,22 +123,27 @@ func (hdl *TransactionHandler) DebitBalance(ctx *gin.Context) {
 
 	resp := transaction_dto.TransactionResponse{Balance: newBalance}
 
-	response.SendSuccess(ctx, http.StatusCreated, response.SuccessMessage, resp)
+	response.SendSuccess(ctx, http.StatusOK, response.SuccessMessage, resp)
 }
 
-// @Summary Get Pagination Transaction User
-// @Description Retrieves the transaction history for the user's wallet.
-// @Description Note: This endpoint returns a paginated list of credit and debit transactions.
-// @Accept       json
-// @Produce      json
-// @Param        Authorization  header    string  true  "Bearer <token>"
-// @Param        page           query     int     false  "Page number"
-// @Param        size          query     int     false  "Number of items per page"
-// @Param        transactionType query string false "Filter by type (CREDIT/DEBIT)"
-// @Success      200      {object}  response.SuccessResponse{data=[]transaction_dto.TransactionPaginationResponse}
-// @Failure      400      {object}  response.BadRequestResponse
-// @Failure      500      {object}  response.ErrorResponse
-// @Router       /wallet-transaction/history [get]
+// @Summary		History User's Transaction
+// @Description	Deducts funds from the user's wallet.
+// @Tags		Transaction
+// @Accept		json
+// @Produce		json
+//
+// @Param		Authorization		header		string		true		"Bearer <token>"
+// @Param       page           		query     	int     	false  		"Page number"
+// @Param       size          		query     	int     	false  		"Number of items per page"
+// @Param       transactionType 	query 		string 		false 		"Filter by type (CREDIT/DEBIT)"
+//
+// @Success		200	{object}	response.SuccessResponse{data=[]transaction_dto.TransactionPaginationResponse}	"Success"
+// @Failure		400	{object}	response.BadRequestResponse														"Bad Request"
+// @Failure		401	{object}	response.ErrorResponse															"Unauthorized"
+// @Failure		500	{object}	response.ErrorResponse															"Internal Server Error"
+//
+// @Security	BearerAuth
+// @Router		/wallet-transaction/history [get]
 func (hdl *TransactionHandler) GetPaginition(ctx *gin.Context) {
 	var (
 		req                 transaction_dto.TransactionPaginationRequest

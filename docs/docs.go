@@ -17,12 +17,20 @@ const docTemplate = `{
     "paths": {
         "/wallet-transaction/credit": {
             "put": {
-                "description": "Adds funds to the user's wallet.\nNote: This endpoint updates the current wallet balance by applying the specified credit amount.",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Adds funds to the user's wallet.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Transaction"
                 ],
                 "summary": "Credit Wallet",
                 "parameters": [
@@ -45,7 +53,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Success",
                         "schema": {
                             "allOf": [
                                 {
@@ -68,6 +76,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.BadRequestResponse"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -79,12 +93,20 @@ const docTemplate = `{
         },
         "/wallet-transaction/debit": {
             "put": {
-                "description": "Deducts funds from the user's wallet.\nNote: This endpoint updates the wallet balance by applying the specified debit amount.\nNote: This action will return an error if the current balance is insufficient.",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Deducts funds from the user's wallet.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Transaction"
                 ],
                 "summary": "Debit Wallet",
                 "parameters": [
@@ -107,7 +129,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Success",
                         "schema": {
                             "allOf": [
                                 {
@@ -130,6 +152,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.BadRequestResponse"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -141,14 +169,22 @@ const docTemplate = `{
         },
         "/wallet-transaction/history": {
             "get": {
-                "description": "Retrieves the transaction history for the user's wallet.\nNote: This endpoint returns a paginated list of credit and debit transactions.",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Deducts funds from the user's wallet.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get Pagination Transaction User",
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "History User's Transaction",
                 "parameters": [
                     {
                         "type": "string",
@@ -178,7 +214,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Success",
                         "schema": {
                             "allOf": [
                                 {
@@ -204,6 +240,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.BadRequestResponse"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -215,17 +257,32 @@ const docTemplate = `{
         },
         "/wallet/": {
             "post": {
-                "description": "Registers a new wallet for the user.\nNote: Each user is limited to only one active wallet.",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Registers a new wallet for the user.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Create Wallet User",
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Create User's Wallet",
                 "parameters": [
                     {
-                        "description": "Payload creates wallet user",
+                        "type": "string",
+                        "description": "Bearer \u003ctoken\u003e",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Payload create user's wallet",
                         "name": "request",
                         "in": "body",
                         "required": true,
@@ -235,8 +292,8 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "allOf": [
                                 {
@@ -259,6 +316,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.BadRequestResponse"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -270,14 +333,22 @@ const docTemplate = `{
         },
         "/wallet/balance": {
             "get": {
-                "description": "Retrieves the current balance of the user's wallet.\nNote: This endpoint returns the available funds with the authenticated user account.\nNote: This action does not modify any wallet data and provides the most up-to-date balance information.",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves the current balance of the user's wallet.",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get Wallet Balance User",
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Get Balance of the User's Wallet",
                 "parameters": [
                     {
                         "type": "string",
@@ -289,7 +360,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Success",
                         "schema": {
                             "allOf": [
                                 {
@@ -310,6 +381,12 @@ const docTemplate = `{
                         "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/response.BadRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
                         }
                     },
                     "500": {
@@ -486,8 +563,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8081",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "E Wallet API (User Management Service)",
-	Description:      "API Service for managing user accounts, authentication, and authorization.\nFeatures include: user registration, login, logout, token refresh, and token validation.\n<br/><b>Developer:</b> Muhammad Brilian Satria Utama\n<b>Environment:</b> Development",
+	Title:            "E Wallet API (Wallet Service)",
+	Description:      "API Service for wallet user.\n<br/><b>Developer:</b> Muhammad Brilian Satria Utama\n<b>Environment:</b> Development",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

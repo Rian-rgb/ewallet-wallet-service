@@ -16,17 +16,22 @@ type WalletHandler struct {
 	WalletSvc wallet.IService
 }
 
-// @Summary Create Wallet User
-// @Description Registers a new wallet for the user.
-// @Description Note: Each user is limited to only one active wallet.
-// @Descrtiption Note: This endpoint will return an error if a wallet already exists.
-// @Accept       json
-// @Produce      json
-// @Param        request  body      wallet_dto.CreateWalletRequest  true  "Payload creates wallet user"
-// @Success      200      {object}  response.SuccessResponse{data=wallet_dto.CreateWalletResponse}
-// @Failure      400      {object}  response.BadRequestResponse
-// @Failure      500      {object}  response.ErrorResponse
-// @Router       /wallet/ [post]
+// @Summary		Create User's Wallet
+// @Description	Registers a new wallet for the user.
+// @Tags		Wallet
+// @Accept		json
+// @Produce		json
+//
+// @Param		Authorization	header		string								true	"Bearer <token>"
+// @Param		request			body		wallet_dto.CreateWalletRequest		true	"Payload create user's wallet"
+//
+// @Success		201	{object}	response.SuccessResponse{data=wallet_dto.CreateWalletResponse}	"Created"
+// @Failure		400	{object}	response.BadRequestResponse										"Bad Request"
+// @Failure		401	{object}	response.ErrorResponse											"Unauthorized"
+// @Failure		500	{object}	response.ErrorResponse											"Internal Server Error"
+//
+// @Security	BearerAuth
+// @Router		/wallet/ [post]
 func (hdl *WalletHandler) Create(ctx *gin.Context) {
 	var (
 		req            wallet_dto.CreateWalletRequest
@@ -50,17 +55,21 @@ func (hdl *WalletHandler) Create(ctx *gin.Context) {
 	response.SendSuccess(ctx, http.StatusCreated, response.SuccessMessage, resp)
 }
 
-// @Summary Get Wallet Balance User
-// @Description Retrieves the current balance of the user's wallet.
-// @Description Note: This endpoint returns the available funds with the authenticated user account.
-// @Description Note: This action does not modify any wallet data and provides the most up-to-date balance information.
-// @Accept       json
-// @Produce      json
-// @Param        Authorization  header    string  true  "Bearer <token>"
-// @Success      200      {object}  response.SuccessResponse{data=wallet_dto.GetBalanceResponse}
-// @Failure      400      {object}  response.BadRequestResponse
-// @Failure      500      {object}  response.ErrorResponse
-// @Router       /wallet/balance [get]
+// @Summary		Get Balance of the User's Wallet
+// @Description	Retrieves the current balance of the user's wallet.
+// @Tags		Wallet
+// @Accept		json
+// @Produce		json
+//
+// @Param		Authorization	header		string		true	"Bearer <token>"
+//
+// @Success		200	{object}	response.SuccessResponse{data=wallet_dto.GetBalanceResponse}	"Success"
+// @Failure		400	{object}	response.BadRequestResponse										"Bad Request"
+// @Failure		401	{object}	response.ErrorResponse											"Unauthorized"
+// @Failure		500	{object}	response.ErrorResponse											"Internal Server Error"
+//
+// @Security	BearerAuth
+// @Router		/wallet/balance [get]
 func (hdl *WalletHandler) GetBalance(ctx *gin.Context) {
 
 	errCodeUnauthorized := appErrors.ErrCodeUnauthorized

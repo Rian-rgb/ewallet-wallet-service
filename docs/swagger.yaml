@@ -113,20 +113,17 @@ host: localhost:8081
 info:
   contact: {}
   description: |-
-    API Service for managing user accounts, authentication, and authorization.
-    Features include: user registration, login, logout, token refresh, and token validation.
+    API Service for wallet user.
     <br/><b>Developer:</b> Muhammad Brilian Satria Utama
     <b>Environment:</b> Development
-  title: E Wallet API (User Management Service)
+  title: E Wallet API (Wallet Service)
   version: "0.0"
 paths:
   /wallet-transaction/credit:
     put:
       consumes:
       - application/json
-      description: |-
-        Adds funds to the user's wallet.
-        Note: This endpoint updates the current wallet balance by applying the specified credit amount.
+      description: Adds funds to the user's wallet.
       parameters:
       - description: Bearer <token>
         in: header
@@ -143,7 +140,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Success
           schema:
             allOf:
             - $ref: '#/definitions/response.SuccessResponse'
@@ -155,19 +152,24 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.BadRequestResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Credit Wallet
+      tags:
+      - Transaction
   /wallet-transaction/debit:
     put:
       consumes:
       - application/json
-      description: |-
-        Deducts funds from the user's wallet.
-        Note: This endpoint updates the wallet balance by applying the specified debit amount.
-        Note: This action will return an error if the current balance is insufficient.
+      description: Deducts funds from the user's wallet.
       parameters:
       - description: Bearer <token>
         in: header
@@ -184,7 +186,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Success
           schema:
             allOf:
             - $ref: '#/definitions/response.SuccessResponse'
@@ -196,18 +198,24 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.BadRequestResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
       summary: Debit Wallet
+      tags:
+      - Transaction
   /wallet-transaction/history:
     get:
       consumes:
       - application/json
-      description: |-
-        Retrieves the transaction history for the user's wallet.
-        Note: This endpoint returns a paginated list of credit and debit transactions.
+      description: Deducts funds from the user's wallet.
       parameters:
       - description: Bearer <token>
         in: header
@@ -230,7 +238,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Success
           schema:
             allOf:
             - $ref: '#/definitions/response.SuccessResponse'
@@ -244,20 +252,31 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.BadRequestResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: Get Pagination Transaction User
+      security:
+      - BearerAuth: []
+      summary: History User's Transaction
+      tags:
+      - Transaction
   /wallet/:
     post:
       consumes:
       - application/json
-      description: |-
-        Registers a new wallet for the user.
-        Note: Each user is limited to only one active wallet.
+      description: Registers a new wallet for the user.
       parameters:
-      - description: Payload creates wallet user
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Payload create user's wallet
         in: body
         name: request
         required: true
@@ -266,8 +285,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             allOf:
             - $ref: '#/definitions/response.SuccessResponse'
@@ -279,19 +298,24 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.BadRequestResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: Create Wallet User
+      security:
+      - BearerAuth: []
+      summary: Create User's Wallet
+      tags:
+      - Wallet
   /wallet/balance:
     get:
       consumes:
       - application/json
-      description: |-
-        Retrieves the current balance of the user's wallet.
-        Note: This endpoint returns the available funds with the authenticated user account.
-        Note: This action does not modify any wallet data and provides the most up-to-date balance information.
+      description: Retrieves the current balance of the user's wallet.
       parameters:
       - description: Bearer <token>
         in: header
@@ -302,7 +326,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Success
           schema:
             allOf:
             - $ref: '#/definitions/response.SuccessResponse'
@@ -314,9 +338,17 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/response.BadRequestResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.ErrorResponse'
-      summary: Get Wallet Balance User
+      security:
+      - BearerAuth: []
+      summary: Get Balance of the User's Wallet
+      tags:
+      - Wallet
 swagger: "2.0"

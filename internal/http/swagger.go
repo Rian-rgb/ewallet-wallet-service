@@ -8,10 +8,9 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title           E Wallet API (User Management Service)
+// @title           E Wallet API (Wallet Service)
 // @version         0.0
-// @description     API Service for managing user accounts, authentication, and authorization.
-// @description     Features include: user registration, login, logout, token refresh, and token validation.
+// @description     API Service for wallet user.
 // @description     <br/><b>Developer:</b> Muhammad Brilian Satria Utama
 // @description     <b>Environment:</b> Development
 // @host            localhost:8081
